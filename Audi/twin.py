@@ -7,12 +7,9 @@ import plotly.express as px
 import numpy as np
 import plotly.graph_objects as go
 from dash.exceptions import PreventUpdate
-import sys
-
 
 print(f"Python version: {sys.version}")
 print(f"Pandas version: {pd.__version__}")
-
 
 # SUBTASK-4
 # --------------------------------
@@ -55,12 +52,19 @@ def load_and_preprocess_data():
                             'Short_Name': str(row[2]) if pd.notna(row[2]) else 'Unknown',
                             'Month': month,
                             'Year': 2023 if j == 0 else 2024,
-                            'Consumption_m3': float(row[col_idx])
+                            'Consumption_m3': float(row[col_idx]) if str(row[col_idx]).replace('.','',1).isdigit() else 0
                         }
                         consumption_data.append(consumption)
                     except Exception as e:
                         print(f"Skipping row {i} col {col_idx} due to error: {e}")
-                        continue
+                        consumption = {
+                            'Production_Hall': row[1],
+                            'Short_Name': str(row[2]) if pd.notna(row[2]) else 'Unknown',
+                            'Month': month,
+                            'Year': 2023 if j == 0 else 2024,
+                            'Consumption_m3': 0
+                        }
+                        consumption_data.append(consumption)
     
     df_consumption = pd.DataFrame(consumption_data)
     
@@ -132,31 +136,137 @@ class WaterSystemDigitalTwin:
         
     def initialize_state(self):
         state = {
-            'production_halls': {},
+            'production_halls': {
+                'G19': {
+                    'water_sources': ['Brunn 1', 'Brunn 2'],
+                    'average_consumption': 25000,
+                    'status': 'normal'
+                },
+                'G95': {
+                    'water_sources': ['Brunn 3', 'Brunn 4', 'Brunn 5'],
+                    'average_consumption': 35000,
+                    'status': 'normal'
+                },
+                'MOT': {
+                    'water_sources': ['Municipal'],
+                    'average_consumption': 5000,
+                    'status': 'normal'
+                },
+                'G04': {
+                    'water_sources': ['Municipal'],
+                    'average_consumption': 8000,
+                    'status': 'normal'
+                },
+                'G06': {
+                    'water_sources': ['Municipal'],
+                    'average_consumption': 12000,
+                    'status': 'normal'
+                },
+                'G07': {
+                    'water_sources': ['Municipal'],
+                    'average_consumption': 6000,
+                    'status': 'normal'
+                },
+                'G09': {
+                    'water_sources': ['Municipal'],
+                    'average_consumption': 7000,
+                    'status': 'normal'
+                },
+                'G10': {
+                    'water_sources': ['Municipal'],
+                    'average_consumption': 5000,
+                    'status': 'normal'
+                },
+                'G20': {
+                    'water_sources': ['Municipal'],
+                    'average_consumption': 9000,
+                    'status': 'normal'
+                }
+            },
             'water_sources': {
-                'Brunn 1': {'capacity': 50000, 'current_level': 40000},
-                'Brunn 2': {'capacity': 50000, 'current_level': 45000},
-                'Municipal': {'capacity': float('inf'), 'current_level': float('inf')}
+                'Brunn 1': {
+                    'capacity': 500000,
+                    'current_level': 400000,
+                    'serves': ['G19'],
+                    'type': 'Industrial'
+                },
+                'Brunn 2': {
+                    'capacity': 500000,
+                    'current_level': 450000,
+                    'serves': ['G19'],
+                    'type': 'Industrial'
+                },
+                'Brunn 3': {
+                    'capacity': 1500000,
+                    'current_level': 1400000,
+                    'serves': ['G95'],
+                    'type': 'Industrial'
+                },
+                'Brunn 4': {
+                    'capacity': 1500000,
+                    'current_level': 1400000,
+                    'serves': ['G95'],
+                    'type': 'Industrial'
+                },
+                'Brunn 5': {
+                    'capacity': 1500000,
+                    'current_level': 1400000,
+                    'serves': ['G95'],
+                    'type': 'Industrial'
+                },
+                'Municipal': {
+                    'capacity': float('inf'),
+                    'current_level': float('inf'),
+                    'serves': ['MOT', 'G04', 'G06', 'G07', 'G09', 'G10', 'G20'],
+                    'type': 'Drinking'
+                }
             },
             'distribution_network': {
-                'pipes': {},
-                'valves': {}
+                'pipes': {
+                    'G19_main': {
+                        'diameter': 'DN150',
+                        'flow_rate': 500,
+                        'status': 'normal'
+                    },
+                    'G95_main': {
+                        'diameter': 'DN150',
+                        'flow_rate': 800,
+                        'status': 'normal'
+                    },
+                    'MOT_main': {
+                        'diameter': 'DN150',
+                        'flow_rate': 200,
+                        'status': 'normal'
+                    }
+                },
+                'valves': {
+                    'G19_valve': {
+                        'status': 'open',
+                        'controls': 'G19_main'
+                    },
+                    'G95_valve': {
+                        'status': 'open',
+                        'controls': 'G95_main'
+                    }
+                }
+            },
+            'water_types': {
+                'Industrial': {
+                    'quality': 'medium',
+                    'treatment_required': True
+                },
+                'Drinking': {
+                    'quality': 'high',
+                    'treatment_required': False
+                }
             }
         }
         
-        for hall in self.historical_data['Production_Hall'].unique():
-            if pd.isna(hall):
-                continue
-                
+        # Calculate initial average consumption from historical data
+        for hall in state['production_halls']:
             hall_data = self.historical_data[self.historical_data['Production_Hall'] == hall]
-            avg_consumption = hall_data['Consumption_m3'].mean()
-            
-            state['production_halls'][hall] = {
-                'average_consumption': avg_consumption,
-                'current_consumption': avg_consumption,
-                'status': 'normal',
-                'water_source': 'Brunn 1'  # Default source
-            }
+            if not hall_data.empty:
+                state['production_halls'][hall]['average_consumption'] = hall_data['Consumption_m3'].mean()
         
         return state
     
@@ -356,6 +466,9 @@ app.layout = html.Div([
                             options=[
                                 {'label': 'Brunn 1', 'value': 'Brunn 1'},
                                 {'label': 'Brunn 2', 'value': 'Brunn 2'},
+                                {'label': 'Brunn 3', 'value': 'Brunn 3'},
+                                {'label': 'Brunn 4', 'value': 'Brunn 4'},
+                                {'label': 'Brunn 5', 'value': 'Brunn 5'},
                                 {'label': 'Municipal', 'value': 'Municipal'}
                             ],
                             value='Brunn 1',
@@ -782,4 +895,3 @@ def run_digital_twin_simulation(n_clicks, hall, prod_level, water_source, temp, 
 # --------------------------------
 if __name__ == '__main__':
     app.run_server(debug=True)
-
