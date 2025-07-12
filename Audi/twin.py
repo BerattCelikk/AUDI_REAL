@@ -13,8 +13,8 @@ from dash.exceptions import PreventUpdate
 # Data loading and preprocessing function
 def load_and_preprocess_data():
     try:
-        df_top = pd.read_excel("TOP_consumers_engine_2024.xlsx", header=None)
-        df_water = pd.read_excel("Water_consumption_AH_2024.xlsx", header=None)
+        df_top = pd.read_excel("Audi/TOP_consumers_engine_2024.xlsx", header=None)
+        df_water = pd.read_excel("Audi/Water_consumption_AH_2024.xlsx", header=None)
     except Exception as e:
         print(f"Error loading Excel files: {e}")
         return None, None, None
@@ -245,6 +245,7 @@ digital_twin = WaterSystemDigitalTwin(df_consumption)
 # --------------------------------
 # Dash app
 app = dash.Dash(__name__, suppress_callback_exceptions=True)
+server = app.server
 
 app.layout = html.Div([
     html.H1("Audi Hungaria Water Consumption Monitoring Panel", 
@@ -774,4 +775,4 @@ def run_digital_twin_simulation(n_clicks, hall, prod_level, water_source, temp, 
 
 # --------------------------------
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run_server(debug=True)
