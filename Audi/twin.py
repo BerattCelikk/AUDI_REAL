@@ -9,11 +9,10 @@ import plotly.graph_objects as go
 from dash.exceptions import PreventUpdate
 import sys
 
-print("=== SİSTEM BİLGİSİ ===")
+print("=== SİSTEM BİLGİLERİ ===")
 print(f"Python: {sys.version}")
-print(f"Dash: {dash.__version__}")
 print(f"Pandas: {pd.__version__}")
-print(f"Server var mı?: {'server' in dir(app)}")
+print(f"Dash: {dash.__version__}")
 
 # SUBTASK-4
 # --------------------------------
