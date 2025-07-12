@@ -3,3 +3,4 @@ pandas==1.4.4
 plotly==5.18.0
 openpyxl==3.0.10
 gunicorn==20.1.0
+numpy==1.24.4
