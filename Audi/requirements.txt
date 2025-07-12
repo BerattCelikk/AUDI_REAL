@@ -1,5 +1,5 @@
 dash==2.14.0
-pandas==2.0.3  
+pandas==1.5.3  
 plotly==5.18.0
 openpyxl==3.1.2
 gunicorn==21.2.0
