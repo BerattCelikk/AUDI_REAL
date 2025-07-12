@@ -7,6 +7,8 @@ import plotly.express as px
 import numpy as np
 import plotly.graph_objects as go
 from dash.exceptions import PreventUpdate
+import sys
+
 
 print(f"Python version: {sys.version}")
 print(f"Pandas version: {pd.__version__}")
