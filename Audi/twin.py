@@ -7,6 +7,13 @@ import plotly.express as px
 import numpy as np
 import plotly.graph_objects as go
 from dash.exceptions import PreventUpdate
+import sys
+
+print("=== SİSTEM BİLGİSİ ===")
+print(f"Python: {sys.version}")
+print(f"Dash: {dash.__version__}")
+print(f"Pandas: {pd.__version__}")
+print(f"Server var mı?: {'server' in dir(app)}")
 
 # SUBTASK-4
 # --------------------------------
@@ -776,3 +783,4 @@ def run_digital_twin_simulation(n_clicks, hall, prod_level, water_source, temp, 
 # --------------------------------
 if __name__ == '__main__':
     app.run_server(debug=True)
+
