@@ -144,6 +144,11 @@ class WaterSystemDigitalTwin:
                     'average_consumption': 25000,
                     'status': 'normal'
                 },
+                'G9': {  
+                'water_sources': ['Municipal'],
+                'average_consumption': 6500, 
+                'status': 'normal'
+                },
                 'G95': {
                     'water_sources': ['Brunn 3', 'Brunn 4', 'Brunn 5'],
                     'average_consumption': 35000,
@@ -152,6 +157,16 @@ class WaterSystemDigitalTwin:
                 'MOT': {
                     'water_sources': ['Municipal'],
                     'average_consumption': 5000,
+                    'status': 'normal'
+                },
+                'FZW': {
+                    'water_sources': ['Municipal'],
+                    'average_consumption': 4000,
+                    'status': 'normal'
+                },
+                'G01': {
+                    'water_sources': ['Municipal'],
+                    'average_consumption': 6000,
                     'status': 'normal'
                 },
                 'G04': {
@@ -179,9 +194,49 @@ class WaterSystemDigitalTwin:
                     'average_consumption': 5000,
                     'status': 'normal'
                 },
+                'G11': {
+                    'water_sources': ['Municipal'],
+                    'average_consumption': 4500,
+                    'status': 'normal'
+                },
+                'G12': {
+                    'water_sources': ['Municipal'],
+                    'average_consumption': 5500,
+                    'status': 'normal'
+                },
+                'G13': {
+                    'water_sources': ['Municipal'],
+                    'average_consumption': 6500,
+                    'status': 'normal'
+                },
+                'G17': {
+                    'water_sources': ['Municipal'],
+                    'average_consumption': 7500,
+                    'status': 'normal'
+                },
                 'G20': {
                     'water_sources': ['Municipal'],
                     'average_consumption': 9000,
+                    'status': 'normal'
+                },
+                'G23': {
+                    'water_sources': ['Municipal'],
+                    'average_consumption': 8500,
+                    'status': 'normal'
+                },
+                'G1': {
+                    'water_sources': ['Municipal'],
+                    'average_consumption': 3000,
+                    'status': 'normal'
+                },
+                'G2.1': {
+                    'water_sources': ['Municipal'],
+                    'average_consumption': 3500,
+                    'status': 'normal'
+                },
+                'G2.2': {
+                    'water_sources': ['Municipal'],
+                    'average_consumption': 4000,
                     'status': 'normal'
                 }
             },
@@ -219,7 +274,8 @@ class WaterSystemDigitalTwin:
                 'Municipal': {
                     'capacity': float('inf'),
                     'current_level': float('inf'),
-                    'serves': ['MOT', 'G04', 'G06', 'G07', 'G09', 'G10', 'G20'],
+                    'serves': ['MOT', 'FZW', 'G01', 'G04', 'G06', 'G07', 'G09', 'G9', 'G10',
+                              'G11', 'G12', 'G13', 'G17', 'G20', 'G23', 'G1', 'G2.1', 'G2.2'],
                     'type': 'Drinking'
                 }
             },
